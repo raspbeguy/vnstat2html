@@ -5,6 +5,13 @@ import os
 import json
 import jinja2
 
+def prettysize(num):
+    for unit in ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB"]:
+        if abs(num) < 1024.0:
+            return f"{num:3.1f}{unit}"
+        num /= 1024.0
+    return f"{num:.1f}YiB"
+
 report = json.load(sys.stdin)
 try:
     rootdir = sys.argv[1]
@@ -16,6 +23,7 @@ os.makedirs(rootdir, exist_ok=True)
 
 templateLoader = jinja2.FileSystemLoader(searchpath="./")
 templateEnv = jinja2.Environment(loader=templateLoader)
+templateEnv.filters["prettysize"] = prettysize
 
 if_tpl = templateEnv.get_template("interface.html")
 

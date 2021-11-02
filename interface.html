@@ -2,19 +2,118 @@
 <html>
     <head>
         <title>Interface {{ interface.name }}</title> 
+        <link rel="stylesheet" href="https://classless.de/classless.css">
+        <link rel="stylesheet" href="https://classless.de/addons/themes.css">
+        <link rel="stylesheet" href="https://classless.de/addons/tabbox.css">
     </head>
     <body>
-        <h1>{{ interface.name }}</h1>
-        {% with date = interface.created.date %}
-        <p><b>Creation</b>: {{ date.year }}-{{ date.month }}-{{ date.day }}</p>
-        {% endwith %}
-        {% with date = interface.updated.date, time = interface.updated.time %}
-        <p><b>Updated</b>: {{ date.year }}-{{ date.month }}-{{ date.day }} {{ time.hour }}:{{ time.minute }}</p>
-        {% endwith %}
+        <h1>Report for interface <code>{{ interface.name }}</code></h1>
+
+        <h2>General</h2>
+        {%- with date = interface.created.date %}
+        <p><b>Creation</b>: {{ "%04d" % date.year }}-{{ "%02d" % date.month }}-{{ "%02d" % date.day }}</p>
+        {%- endwith %}
+        {%- with date = interface.updated.date, time = interface.updated.time %}
+        <p><b>Updated</b>: {{ "%04d" % date.year }}-{{ "%02d" % date.month }}-{{ "%02d" % date.day }} {{ "%02d" % time.hour }}:{{ "%02d" % time.minute }}</p>
+        {%- endwith %}
         <p><b>Total traffic</b>:<p>
         <ul>
-            <li>tx: {{ interface.traffic.total.tx }}</li>
-            <li>rx: {{ interface.traffic.total.rx }}</li>
+            <li>tx: {{ interface.traffic.total.tx | prettysize }}</li>
+            <li>rx: {{ interface.traffic.total.rx | prettysize }}</li>
         </ul>
+
+        <h2>Year</h2>
+        <table>
+            <thead>
+                <th>date</th>
+                <th>tx</th>
+                <th>rx</th>
+            </thead>
+            <tbody>
+            {%- for item in interface.traffic.year %}
+                <tr>
+                    <td>{{ "%04d" % item.date.year }}</td>
+                    <td>{{ item.tx | prettysize }}</td>
+                    <td>{{ item.rx | prettysize }}</td>
+                </tr>
+            {%- endfor %}
+            </tbody>
+        </table>
+
+
+        <h2>Month</h2>
+        <table>
+            <thead>
+                <th>date</th>
+                <th>tx</th>
+                <th>rx</th>
+            </thead>
+            <tbody>
+            {%- for item in interface.traffic.month %}
+                <tr>
+                    <td>{{ "%04d" % item.date.year }}-{{ "%02d" % item.date.month }}</td>
+                    <td>{{ item.tx | prettysize }}</td>
+                    <td>{{ item.rx | prettysize }}</td>
+                </tr>
+            {%- endfor %}
+            </tbody>
+        </table>
+
+
+        <h2>Day</h2>
+        <table>
+            <thead>
+                <th>date</th>
+                <th>tx</th>
+                <th>rx</th>
+            </thead>
+            <tbody>
+            {%- for item in interface.traffic.day %}
+                <tr>
+                    <td>{{ "%04d" % item.date.year }}-{{ "%02d" % item.date.month }}-{{ "%02d" % item.date.day }}</td>
+                    <td>{{ item.tx | prettysize }}</td>
+                    <td>{{ item.rx | prettysize }}</td>
+                </tr>
+            {%- endfor %}
+            </tbody>
+        </table>
+
+
+        <h2>Hour</h2>
+        <table>
+            <thead>
+                <th>date</th>
+                <th>tx</th>
+                <th>rx</th>
+            </thead>
+            <tbody>
+            {%- for item in interface.traffic.hour %}
+                <tr>
+                    <td>{{ "%04d" % item.date.year }}-{{ "%02d" % item.date.month }}-{{ "%02d" % item.date.day }} {{ "%02d" % item.time.hour }}:{{ "%02d" % item.time.minute }}</td>
+                    <td>{{ item.tx | prettysize }}</td>
+                    <td>{{ item.rx | prettysize }}</td>
+                </tr>
+            {%- endfor %}
+            </tbody>
+        </table>
+
+        <h2>5 minute</h2>
+        <table>
+            <thead>
+                <th>date</th>
+                <th>tx</th>
+                <th>rx</th>
+            </thead>
+            <tbody>
+            {%- for item in interface.traffic.fiveminute %}
+                <tr>
+                    <td>{{ "%04d" % item.date.year }}-{{ "%02d" % item.date.month }}-{{ "%02d" % item.date.day }} {{ "%02d" % item.time.hour }}:{{ "%02d" % item.time.minute }}</td>
+                    <td>{{ item.tx | prettysize }}</td>
+                    <td>{{ item.rx | prettysize }}</td>
+                </tr>
+            {%- endfor %}
+            </tbody>
+        </table>
+
     </body>
 </html>
