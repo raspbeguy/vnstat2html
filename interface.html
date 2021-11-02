@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Interface {{ interface.name }}</title> 
+    </head>
+    <body>
+        <h1>{{ interface.name }}</h1>
+        {% with date = interface.created.date %}
+        <p><b>Creation</b>: {{ date.year }}-{{ date.month }}-{{ date.day }}</p>
+        {% endwith %}
+        {% with date = interface.updated.date, time = interface.updated.time %}
+        <p><b>Updated</b>: {{ date.year }}-{{ date.month }}-{{ date.day }} {{ time.hour }}:{{ time.minute }}</p>
+        {% endwith %}
+        <p><b>Total traffic</b>:<p>
+        <ul>
+            <li>tx: {{ interface.traffic.total.tx }}</li>
+            <li>rx: {{ interface.traffic.total.rx }}</li>
+        </ul>
+    </body>
+</html>
