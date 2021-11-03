@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>vnstat report</title> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spcss@0.8.0">
+    </head>
+    <body>
+        <h1>vnstat report</h1>
+            <table>
+                {%- for interface in report["interfaces"] %}
+                <tr>
+                    <th>{{ interface.name }}</th>
+                    <td><a href="{{ interface.name }}/5min.html">5 minute</a></td>
+                    <td><a href="{{ interface.name }}/hour.html">Hour</a></td>
+                    <td><a href="{{ interface.name }}/day.html">Day</a></td>
+                    <td><a href="{{ interface.name }}/month.html">Month</a></td>
+                    <td><a href="{{ interface.name }}/year.html">Year</a></td>
+                </tr>
+                {%- endfor %}
+            </table>
+    </body>
+</html>

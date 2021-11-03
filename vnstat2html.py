@@ -8,9 +8,9 @@ import jinja2
 def prettysize(num):
     for unit in ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB"]:
         if abs(num) < 1024.0:
-            return f"{num:3.1f}{unit}"
+            return f"{num:3.1f} {unit}"
         num /= 1024.0
-    return f"{num:.1f}YiB"
+    return f"{num:.1f} YiB"
 
 report = json.load(sys.stdin)
 try:
@@ -25,9 +25,15 @@ templateLoader = jinja2.FileSystemLoader(searchpath="./")
 templateEnv = jinja2.Environment(loader=templateLoader)
 templateEnv.filters["prettysize"] = prettysize
 
-if_tpl = templateEnv.get_template("interface.html")
+index_tpl = templateEnv.get_template("templates/index.html")
+
+with open(rootdir+"/index.html", "w") as html_file:
+    html_file.write(index_tpl.render(report=report))
 
 for interface in report["interfaces"]:
-    html_filename = interface["name"] + ".html"
-    with open(rootdir+"/"+html_filename, "w") as html_file:
-        html_file.write(if_tpl.render(interface=interface))
+    if_dir = rootdir+"/"+interface["name"]
+    os.makedirs(if_dir, exist_ok=True)
+    for report_type in ["5min", "hour", "day", "month", "year"]:
+        with open(if_dir+"/{}.html".format(report_type), "w") as html_file:
+            if_tpl = templateEnv.get_template("templates/{}.html".format(report_type))
+            html_file.write(if_tpl.render(interface=interface))
